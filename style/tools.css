@@ -1,0 +1,16 @@
+.tools-body{
+    height: 80%;
+}
+.tools-header{
+    height: 6%;
+    font-family: SimHei;
+    font-weight: 1000;
+    font-size: large;
+    text-align: center;
+}
+.tools-tool{
+    text-align: center;
+    height: 8%;
+    margin: 5px 10px 20px;
+    border: 2px solid rgb(233, 189, 189);
+}

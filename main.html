@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" type="text/css" href="style\main.css" />
+        <link rel="stylesheet" type="text/css" href="style\body.css" />
+        <link rel="stylesheet" type="text/css" href="style\tools.css" />
+        <link rel="stylesheet" type="text/css" href="style\header.css" />
+        <title>form</title>
+    </head>
+    <body>
+        <div class="draggable-form-header">
+            <div class="header-icon">
+                <img src='img\微信图片_20210906140626.jpg' alt="icon" style="height: 100%;">
+            </div>
+        </div>
+        
+        <div class="draggable-form-tools">
+            <div class="tools-header">
+                <span>表单控件</span>
+            </div>
+            <hr />
+            <div class="tools-body">
+                <dl class="ctrols">
+                    <dt></dt>
+                    <!-- <dd class="tools-tool" id="short-text" draggable="true">
+                        <div>短文本</div>
+                    </dd>
+                    <dd class="tools-tool" id="long-text" draggable="true">
+                        <div>长文本</div>
+                    </dd> -->
+                </dl>
+            </div>
+        </div>
+        <div class="draggable-form-body">
+            <div class="body-main">
+                <div class="body-header">
+                    <span>
+                        表单创建
+                    </span>
+                </div>
+                <form id="form">
+                    <div class="body-form" id="body-form">
+                            
+                    </div>
+                    <input type="submit">
+                </form>
+            </div>
+        </div>
+        <script type="text/javascript">
+        //目标区域（表单创建区域）
+        const target = document.querySelector('.body-form');
+
+        const editCtrlName = function (obj) {
+            const inputElement = obj.querySelector('input');
+            inputElement.disabled = false;
+            inputElement.focus();
+        }
+        const updateCtrlName = function (inputElement) {
+            inputElement.disabled = true;
+        }
+        
+        const formTypeActions = {
+            '短文本': {
+                action: function () {
+                    const formNode = document.createElement('div');
+                    formNode.className = 'body-form-target';
+                    formNode.innerHTML = `<div class="body-form-target-title" onclick="editCtrlName(this)">
+                                          <input type="text" placeholder="短文本" disabled onchange="updateCtrlName(this)"/>
+                                        </div>
+                                        <input type="text" name="text" />`;
+                    target.appendChild(formNode);
+                },
+            },
+            '长文本': {
+                action: function () {
+                    const formNode = document.createElement('div');
+                    formNode.className = 'body-form-target';
+                    formNode.innerHTML = `<div class="body-form-target-title"><input type="text" placeholder="长文本" disabled /></div>
+                                        <textarea></textarea>`;
+                    target.appendChild(formNode);
+                }
+            },
+        };
+        Object.keys(formTypeActions).forEach(key => {
+            //遍历formTypeActions生成表单控件元素
+            const ddElement = document.createElement('dd');
+            ddElement.className = 'tools-tool';
+            ddElement.setAttribute('draggable', true);
+            ddElement.innerHTML = '<div>' + key + '</div>';
+            ddElement.ondragstart = function () {
+                dragCtrl = this;
+            }
+            ddElement.ondragend = function () {
+                dragCtrl = null;
+            }
+            document.querySelector('.tools-body').appendChild(ddElement);
+        });
+        //当前拖拽对象
+        let dragCtrl = null;
+
+        //拖拽进入目标事件
+        target.ondragover =  (e) => {
+            e.preventDefault();
+        }
+        //拖拽进入目标区域松开鼠标事件
+        target.ondrop =  () => {
+            if(dragCtrl && formTypeActions[dragCtrl.innerText]){
+                formTypeActions[dragCtrl.innerText].action();
+                // TODO saveToLocalStorage();
+            }
+        }
+
+        //获得所有表单字段
+        const targetTitles = document.querySelectorAll('.body-form-target-title input');
+        // targetTitles.onclick = targetTitles.forEach(item => {
+        //     console.log(item);
+        //     item.onclick = formTypeActions[item.placeholder].click(item);
+        // })
+        targetTitles.onclick = () => {
+            console.log('点击了');
+        }
+        </script>
+    </body>
+</html>
