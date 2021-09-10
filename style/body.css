@@ -60,7 +60,16 @@
 }
 .body-auth input {
     width: 60px;
-    height: 30px;
+    height: 25  px;
+    border:none;
+    background-color: white;
+}
+
+.body-auth input:hover {
+    transform: scale(1.1);
+    border: 2px transparent solid;
+    border-image:linear-gradient(to right,white,blue) 1 10;
+    box-shadow: 5px 6px 10px #000;
 }
 
 .body-auth button {
@@ -68,6 +77,20 @@
     height: 25px;
     background-color: white;
     border: 1px;
+    transform: scale(1.0);
+}
+
+.body-auth button:hover {
+    transform: scale(1.1);
+    border: 2px transparent solid;
+    border-image:linear-gradient(to right,white,blue) 1 10;
+    box-shadow: 5px 6px 10px #000;
+}
+
+.body-auth button:active {
+    border: 2px transparent solid;
+    border-image:linear-gradient(to right,white,blue) 1 10;
+    box-shadow: 5px 6px 10px #000;
 }
 
 .body-form-target-title div {

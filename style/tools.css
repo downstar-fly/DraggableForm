@@ -19,6 +19,7 @@
     transform: scale(1.0);
     height: 8%;
     margin: 5px 10px 20px;
+    color: white;
     border: 2px solid white;
 }
 
@@ -36,6 +37,7 @@
 
 .tools-tool:hover {
     transform: scale(1.1);
+    color: black;
     box-shadow: 0px 0px 30px #ccc;
 }
 
