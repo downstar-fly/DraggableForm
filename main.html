@@ -17,18 +17,12 @@
         
         <div class="draggable-form-tools">
             <div class="tools-header">
-                <span>表单控件</span>
+                <div>表单控件</div>
             </div>
             <hr />
             <div class="tools-body">
-                <dl class="ctrols">
+                <dl class="tools-body-ctrols">
                     <dt></dt>
-                    <!-- <dd class="tools-tool" id="short-text" draggable="true">
-                        <div>短文本</div>
-                    </dd>
-                    <dd class="tools-tool" id="long-text" draggable="true">
-                        <div>长文本</div>
-                    </dd> -->
                 </dl>
             </div>
         </div>
@@ -42,6 +36,11 @@
                 <form id="form">
                     <div class="body-form" id="body-form">
                             
+                    </div>
+                    <div class="body-auth">
+                        <input type="reset">
+                        <button onclick="clearNodes()">清除</button>
+                        <input type="submit">
                     </div>
                 </form>
             </div>
@@ -58,6 +57,10 @@
             if(window.localStorage.getItem('form')){
                 document.getElementById('body-form').innerHTML = window.localStorage.getItem('form');
                 // length = window.localStorage.getItem('addNewlength');
+                addNewNodes = [];
+                document.querySelectorAll('#body-form .body-form-target').forEach(node => {
+                    addNewNodes.push(node);
+                });
             }
         };
         window.onload = getFormBody;
@@ -84,6 +87,15 @@
         const deleteCtrlFrom = function (deleteElement) {
             deleteElement = deleteElement.parentNode.parentNode;
             deleteElement.remove();
+            window.localStorage.setItem('form',document.getElementById('body-form').innerHTML);
+        }
+
+        //删除所有字段
+        function clearNodes(){
+            document.querySelectorAll('.body-form-target').forEach(node => {
+                node.remove();
+            });
+            window.localStorage.clear();
         }
         
         //表单字段主体
@@ -97,7 +109,7 @@
                                             <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
                                           </div>
                                           <div class="body-form-target-body">
-                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-<span></button>
+                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
                                             <input type="text" name="text" />
                                           </div>`;
                     
@@ -114,7 +126,7 @@
                                             <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
                                          </div>
                                          <div class="body-form-target-body">
-                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-<span></button>
+                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
                                             <textarea></textarea>
                                          </div>`;
                     target.appendChild(formNode);
@@ -130,7 +142,7 @@
                                             <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
                                          </div>
                                          <div class="body-form-target-body">
-                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-<span></button>
+                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
                                             <input type="number" name="number" placeholder="请输入数字" />
                                          </div>`;
                     target.appendChild(formNode);
@@ -146,8 +158,24 @@
                                             <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
                                          </div>
                                          <div class="body-form-target-body">
-                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-<span></button>
+                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
                                             <input type="password" name="password" placeholder="请输入密码" />
+                                         </div>`;
+                    target.appendChild(formNode);
+                    return formNode;
+                }
+            },
+            '电话': {
+                action: function () {
+                    const formNode = document.createElement('div');
+                    formNode.className = 'body-form-target tel';
+                    formNode.innerHTML = `<div class="body-form-target-title" onclick="editCtrlName(this)">
+                                            <div>电话</div>
+                                            <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
+                                         </div>
+                                         <div class="body-form-target-body">
+                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
+                                            <input type="tel" name="tel" placeholder="请输入电话" />
                                          </div>`;
                     target.appendChild(formNode);
                     return formNode;
@@ -162,7 +190,7 @@
                                             <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
                                          </div>
                                          <div class="body-form-target-body">
-                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-<span></button>
+                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
                                             <input type="email" name="email" placeholder="请输入邮箱" />
                                          </div>`;
                     target.appendChild(formNode);
@@ -178,7 +206,7 @@
                                             <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
                                          </div>
                                          <div class="body-form-target-body">
-                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-<span></button>
+                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
                                             <input type="file" name="file" />
                                          </div>`;
                     target.appendChild(formNode);
@@ -194,7 +222,7 @@
                                             <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
                                          </div>
                                          <div class="body-form-target-body">
-                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-<span></button>
+                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
                                             <input type="url" name="url" placeholder="请输入链接" />
                                          </div>`;
                     target.appendChild(formNode);
@@ -210,7 +238,7 @@
                                             <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
                                          </div>
                                          <div class="body-form-target-body">
-                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-<span></button>
+                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
                                             <input type="color" name="color" />
                                          </div>`;
                     target.appendChild(formNode);
@@ -226,7 +254,7 @@
                                             <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
                                          </div>
                                          <div class="body-form-target-body">
-                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-<span></button>
+                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
                                             <input type="range" name="range" />
                                          </div>`;
                     target.appendChild(formNode);
@@ -242,8 +270,40 @@
                                             <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
                                          </div>
                                          <div class="body-form-target-body">
-                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-<span></button>
+                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
                                             <input type="date" name="date" />
+                                         </div>`;
+                    target.appendChild(formNode);
+                    return formNode;
+                }
+            },
+            '时间': {
+                action: function () {
+                    const formNode = document.createElement('div');
+                    formNode.className = 'body-form-target time';
+                    formNode.innerHTML = `<div class="body-form-target-title" onclick="editCtrlName(this)">
+                                            <div>时间</div>
+                                            <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
+                                         </div>
+                                         <div class="body-form-target-body">
+                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
+                                            <input type="time" name="time" placeholder="请输入时间" />
+                                         </div>`;
+                    target.appendChild(formNode);
+                    return formNode;
+                }
+            },
+            '周数': {
+                action: function () {
+                    const formNode = document.createElement('div');
+                    formNode.className = 'body-form-target week';
+                    formNode.innerHTML = `<div class="body-form-target-title" onclick="editCtrlName(this)">
+                                            <div>周数</div>
+                                            <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
+                                         </div>
+                                         <div class="body-form-target-body">
+                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
+                                            <input type="week" name="week" placeholder="请输入周数" />
                                          </div>`;
                     target.appendChild(formNode);
                     return formNode;
@@ -258,7 +318,7 @@
                                             <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
                                          </div>
                                          <div class="body-form-target-body">
-                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-<span></button>
+                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
                                             <input type="radio" name="radio" />
                                          </div>`;
                     target.appendChild(formNode);
@@ -274,7 +334,7 @@
                                             <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
                                          </div>
                                          <div class="body-form-target-body">
-                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-<span></button>
+                                            <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
                                             <input type="checkbox" name="checkbox" />
                                          </div>`;
                     target.appendChild(formNode);
@@ -294,7 +354,7 @@
             ddElement.ondragend = function () {
                 dragCtrl = null;
             }
-            document.querySelector('.tools-body').appendChild(ddElement);
+            document.querySelector('.tools-body-ctrols').appendChild(ddElement);
         });
 
         //当前拖拽对象

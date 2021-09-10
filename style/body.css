@@ -36,7 +36,7 @@
 .body-form-target-body button {
     border: none;
     border-radius: 50%;
-    background-color: rgb(231, 222, 221);
+    background-color: white;
     margin-right: 10px;
     margin-top: 6px;
     width: 25px;
@@ -48,8 +48,30 @@
     box-shadow: 0px 0px 30px #ccc;
 }
 .body-form-target-body span {
+    width: 20px;
     font-size: 20px;
     color: red;
-    border-width: 2px;
+    border-width: 5px;
     border-color: rgb(241, 227, 165);
+}
+.body-auth {
+    margin-top: 15px;
+    justify-content: center;
+}
+.body-auth input {
+    width: 60px;
+    height: 30px;
+}
+
+.body-auth button {
+    width: 60px;
+    height: 25px;
+    background-color: white;
+    border: 1px;
+}
+
+.body-form-target-title div {
+    font-size: 17px;
+    font-family: Cursive;
+    font-weight: 1000;
 }
