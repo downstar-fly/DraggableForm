@@ -1,7 +1,7 @@
 .body-main{
     /* width: 100%; */
     width: 45%;
-    height: 700px;
+    height: 730px;
     margin: 8% 20% 0px 20%;
     border: 2px solid red;
 }
@@ -11,6 +11,9 @@
 .body-header{
     font-weight: 1000;
     margin: 20px;
+    border-bottom: 1px solid;
+    border-color: black;
+    padding-bottom: 10px;
 }
 .body-form{
     height: 85%;
@@ -56,11 +59,13 @@
 }
 .body-auth {
     margin-top: 15px;
+    margin-bottom: 20px;
+    padding-top: 30px;
     justify-content: center;
 }
 .body-auth input {
     width: 60px;
-    height: 25  px;
+    height: 25px;
     border:none;
     background-color: white;
 }

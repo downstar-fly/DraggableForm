@@ -45,19 +45,19 @@
     background-color: rgb(219, 230, 231);
 }
 
-::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {     
     -webkit-box-shadow: inset 0 0 6px #00004d;
     border-radius: 10px;
     background-color: #F5F5F5;
 }
 
 ::-webkit-scrollbar-thumb{
-	border-radius: 10px;
+	border-radius: 10px;    
 	-webkit-box-shadow: inset 0 0 6px rgb(26, 6, 18);
-	background-color: rgb(181, 174, 247);
+	background-color: rgb(171, 229, 243);
     height: 10%;
 }
 
 ::-webkit-scrollbar:vertical { 
-    width: 15px;
+    width: 12px;
 }
