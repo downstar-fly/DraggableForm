@@ -34,7 +34,7 @@
 }
 .body-form-target-body {
     display: flex;
-    width: 70%;
+    margin-top: 10px;
 }
 .body-form-target-body button {
     border: none;
@@ -106,4 +106,31 @@
     font-size: 17px;
     font-family: Cursive;
     font-weight: 1000;
+}
+.body-radio-alert {
+    border: 2px transparent solid;
+    border-color: springgreen;
+    display: none;
+    position: absolute;
+    top: 40%;
+    left: 40%;
+    word-wrap:break-word;
+    background-color: white;
+    
+    width: 300px;
+    z-index: 1000;
+}
+.body-radio-alert input {
+    display: block;
+}
+.body-radio-alert input[type="reset"] {
+    display: inline;
+}
+.radio-body {
+    border: 1px transparent solid;
+    border-color: violet;
+    margin-right: 0;
+}
+.radio-body div {
+    display: inline;
 }
