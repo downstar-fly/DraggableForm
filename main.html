@@ -44,19 +44,26 @@
                     </div>
                 </form>
             </div>
-            <div class="body-radio-alert">
-                <form id="alert-form">
-                    <div class="radio-names-setting">
-                        <span>请输入单选框各字段名称（用；隔开）:</span>
-                        <textarea type="text"></textarea>
-                    </div>
-                    <button type="button" class="cancel" onclick="cancel()">取消</button>
-                    <input type="reset">
-                    <button type="button" class="onOk">确定</button>
-                </form>
-            </div>
+            
         </div>
-        <!-- <div class="alertMessageBg"></div> -->
+        <div class="radio-alert">
+            <form id="alert-form">
+                <div class="radio-names-setting">
+                    <div style="margin-bottom: 10px;">请输入各字段名称（用；隔开）:</div>
+                    <textarea type="text"></textarea>
+                </div>
+                <div class="radio-setting-button">
+                    <div>
+                        <button type="button" class="cancel">取消</button>
+                        <input type="reset">
+                    </div>
+                    <div>
+                        <button type="button" class="onOk">确定</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="alertMessageBg"></div>
         <script type="text/javascript" src="/js/main.js"></script>
     </body>
 </html>

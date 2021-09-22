@@ -281,8 +281,6 @@ const formTypeActions = {
                                     <div class="radio-body"></div>
                                  </div>`;
             target.appendChild(formNode);
-            const alertText = document.querySelector('.body-radio-alert');
-            alertText.style = "display: flex;";
             return formNode;
         }
     },
@@ -298,9 +296,23 @@ const formTypeActions = {
                                     <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
                                     <div class="radio-body"></div>
                                  </div>`;
-            target.appendChild(formNode);
-            const alertText = document.querySelector('.body-radio-alert');
-            alertText.style = "display: flex;";
+            target.appendChild(formNode);       
+            return formNode;
+        }
+    },
+    '下拉框': {
+        action: function () {
+            const formNode = document.createElement('div');
+            formNode.className = 'body-form-target checkbox';
+            formNode.innerHTML = `<div class="body-form-target-title" onclick="editCtrlName(this)">
+                                    <div>下拉框</div>
+                                    <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
+                                 </div>
+                                 <div class="body-form-target-body">
+                                    <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
+                                    <input type="text" name="selectText" placeholder="请选择一个选项" />
+                                 </div>`;
+            target.appendChild(formNode);       
             return formNode;
         }
     },
@@ -322,8 +334,11 @@ Object.keys(formTypeActions).forEach(key => {
 
 //当前拖拽对象
 let dragCtrl = null;
-const radioButton = document.querySelector('.onOk');
-let eventListener = null;
+//弹框的按钮事件
+const onOkButton = document.querySelector('.onOk');
+const onCancelButton = document.querySelector('.cancel');
+let okEventListener = null;
+let cancelEventListener = null;
 
 //拖拽进入目标事件
 target.ondragover =  (e) => {
@@ -335,15 +350,42 @@ target.ondrop =  () => {
         const formNode = formTypeActions[dragCtrl.innerText].action();
         
         addNewNodes.push(formNode);       
-        duplicateFormNodeName(formNode);
+        const title = duplicateFormNodeName(formNode);
         //存储
         window.localStorage.setItem('form', document.getElementById('body-form').innerHTML);
-        //弹窗事件
-        const title = formNode.querySelector('.body-form-target-title div').innerText;
-        eventListener = () => {
-            createRadio(title);
+        //  = formNode.querySelector('.body-form-target-title div').innerText;
+        if (title.indexOf('选框') > -1) {
+            //遮罩开启
+            const alertBg = document.querySelector('.alertMessageBg');
+            alertBg.style = "display: block;";
+            //弹窗事件
+            const alertText = document.querySelector('.radio-alert');
+            alertText.style = "display: flex;";
+            okEventListener = () => {
+                createRadio(title);
+            }
+            cancelEventListener = () => {
+                cancelB(title);
+            }
+            onOkButton.addEventListener('click', okEventListener, false);
+            onCancelButton.addEventListener('click', cancelEventListener, false);
         }
-        radioButton.addEventListener('click', eventListener, false);
+        if (title.indexOf('下拉框') > -1) {
+            //遮罩开启
+            const alertBg = document.querySelector('.alertMessageBg');
+            alertBg.style = "display: block;";
+            //弹窗事件
+            const alertText = document.querySelector('.radio-alert');
+            alertText.style = "display: flex;";
+            okEventListener = () => {
+                createDataList(title);
+            }
+            cancelEventListener = () => {
+                cancelB(title);
+            }
+            onOkButton.addEventListener('click', okEventListener, false);
+            onCancelButton.addEventListener('click', cancelEventListener, false);
+        }
     }
 }
 
@@ -362,6 +404,8 @@ function duplicateFormNodeName(formNode){
     if(length > 1){
         element.innerText += length-1;
     }
+
+    return element.innerText;
 }
 
 //创健单选框或多选框
@@ -382,26 +426,78 @@ function createRadio(v) {
         const radioNode = document.createElement('div');
         radioNode.style = 'margin-right: 10px';
         if (v.indexOf('单选框') > -1) {
-            radioNode.innerHTML = `<input type="radio" name="radio" />
-                                <span>`+ name + `</span>`;
+            radioNode.innerHTML = `<label><input type="radio" name="radio" />`
+                                 + name + `</label>`;
         }else if (v.indexOf('多选框') > -1) {
-            radioNode.innerHTML = `<input type="checkbox" name="checkbox" />
-                                <span>`+ name + `</span>`;
+            radioNode.innerHTML = `<label><input type="checkbox" name="checkbox" />`
+                                 + name + `</label>`;
         }
         radioArea.appendChild(radioNode);
     });
-    document.querySelector('.radio-names-setting textarea').value = '';
-    //存储
-    window.localStorage.setItem('form', document.getElementById('body-form').innerHTML);
-    radioButton.removeEventListener('click', eventListener);
-    const alertText = document.querySelector('.body-radio-alert');
-    alertText.style = "display: none;";
-    return false;
+    afterCreate();
 }
 
 //弹窗取消
-function cancel() {
-    radioButton.removeEventListener('click', eventListener);
-    const alertText = document.querySelector('.body-radio-alert');
-    alertText.style = "display: none;";
+function cancelB(v) {
+    
+     //当前选框区域
+     let radioArea = null;
+     //所有的选框区域
+     const radioAreaList = document.querySelectorAll('.body-form-target-title div');
+     radioAreaList.forEach(item => {
+         if (item.innerText === v) {
+            radioArea = item.parentNode.parentNode;
+         }
+     });
+    target.removeChild(radioArea);
+    onOkButton.removeEventListener('click', okEventListener);
+    onCancelButton.removeEventListener('click', cancelEventListener);
+    const settingModal = document.querySelector('.radio-alert');
+    settingModal.style = "display: none;";
+    //遮罩关闭
+    const alertBg = document.querySelector('.alertMessageBg');
+    alertBg.style = "display: none;";
+    //存储
+    window.localStorage.setItem('form', document.getElementById('body-form').innerHTML);
+}
+
+//创建下拉框文本框
+function createDataList(v) {
+    const dataList = document.querySelector('.radio-names-setting textarea').value.split('；');
+    //获取所有的下拉文本框
+    const selectInputs = document.querySelectorAll('.body-form-target-title div');
+    //当前文本框
+    let targetInput = null;
+    selectInputs.forEach(item => {
+        if (item.innerText === v) {
+            item = item.parentNode;
+            targetInput = item.nextElementSibling;
+        }
+    });
+    targetInput.querySelector('input').setAttribute('list',v);
+    const dataListNode = document.createElement('datalist');
+    dataListNode.setAttribute('id', v);
+    dataList.forEach(option => {
+        const optionNode = document.createElement('option');
+        optionNode.innerText = option;
+        dataListNode.appendChild(optionNode);
+    });
+    targetInput.appendChild(dataListNode);
+    afterCreate();
+}
+
+//创建节点完成后的处理
+function afterCreate() {
+    document.querySelector('.radio-names-setting textarea').value = '';
+    //存储
+    window.localStorage.setItem('form', document.getElementById('body-form').innerHTML);
+
+    onOkButton.removeEventListener('click', okEventListener);
+    onCancelButton.removeEventListener('click', cancelEventListener);
+    //弹窗关闭
+    const settingModal = document.querySelector('.radio-alert');
+    settingModal.style = "display: none;";
+    //遮罩关闭
+    const alertBg = document.querySelector('.alertMessageBg');
+    alertBg.style = "display: none;";
 }
