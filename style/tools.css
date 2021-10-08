@@ -47,18 +47,18 @@
 }
 
 ::-webkit-scrollbar-track {     
-    -webkit-box-shadow: inset 0 0 6px #00004d;
+    -webkit-box-shadow: inset 0 0 6px transparent;
     border-radius: 10px;
-    background-color: #F5F5F5;
+    background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb{
 	border-radius: 10px;    
-	-webkit-box-shadow: inset 0 0 6px rgb(26, 6, 18);
-	background-color: whitesmoke;
+	-webkit-box-shadow: inset 0 0 6px transparent;
+	background-image: linear-gradient(#CD853F, #CD69C9,#e2252f);
     height: 10%;
 }
 
 ::-webkit-scrollbar:vertical { 
-    width: 12px;
+    width: 10px;
 }

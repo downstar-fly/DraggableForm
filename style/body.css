@@ -1,7 +1,7 @@
 .body-main{
     /* width: 100%; */
     width: 45%;
-    height: 730px;
+    height: 680px;
     margin: 8% 20% 0px 20%;
     border: 2px solid red;
 }
@@ -57,6 +57,22 @@
     border-width: 5px;
     border-color: rgb(241, 227, 165);
 }
+.body-form-target-body input{
+    border-color: hotpink;
+    -webkit-appearance: none;
+    margin: 0;
+    -moz-appearance: textfield;
+    -webkit-tap-highlight-color:rgb(115, 14, 248);
+}
+
+.body-form-target-body textarea{
+    border-color: hotpink;
+    -webkit-appearance: none !important;
+    margin: 0;
+    -moz-appearance: textfield;
+    -webkit-tap-highlight-color:rgb(115, 14, 248);
+}
+
 .body-auth {
     margin-top: 15px;
     margin-bottom: 20px;
@@ -120,4 +136,13 @@
 }
 .radio-body div {
     display: inline;
+}
+
+.radio-body input {
+    background-color: initial;
+    cursor: default;
+    appearance: auto;
+    box-sizing: border-box;
+    margin: 8px 3px 0px 5px;
+    padding: initial;
 }
