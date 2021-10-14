@@ -5,6 +5,11 @@ let targetTitles = null;
 //添加过的表单字段
 let addNewNodes = [];
 
+//当前拖拽对象
+let dragCtrl = null;
+
+let dragCtrlType = "";
+
 //持久化（半持久化）
 const getFormBody = function () {
     console.log('刷新了');
@@ -58,12 +63,179 @@ function submitNodes() {
     window.localStorage.setItem('form',document.getElementById('body-form').innerHTML);
 }
 
+//校验
+function checkTextContent(textBodyContent) {
+    formTypeActions[dragCtrlType].checkInput(textBodyContent);
+}
+
+function getBirthDay(node) {
+    let birthDay = "";
+    if (node === "出生日期") {
+        const contents = document.querySelectorAll('.body-form-target-title');
+        contents.forEach((e) => {
+            if (e.innerText === '身份证号') {
+                birthDay = e.parentElement.parentElement.querySelector(".body-form-target-body input").value;
+                const year = birthDay.slice(6,10);
+                const month = birthDay.slice(10, 12);
+                const day = birthDay.slice(12, 14);
+                birthDay = year + "-" + month + "-" + day;
+            }
+        });
+    }
+    return birthDay;
+}
+
 //表单字段主体
 const formTypeActions = {
+    '姓名': {
+        action: function () {
+            const formNode = document.createElement('div');
+            formNode.className = 'body-form-target shortText';
+            formNode.setAttribute('draggable', true);
+            formNode.innerHTML = `<div class="body-form-target-title" onclick="editCtrlName(this)">
+                                    <div>姓名</div>
+                                    <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
+                                  </div>
+                                  <div class="body-form-target-body">
+                                    <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
+                                    <input type="text" name="text" onblur="checkTextContent(this)" />
+                                  </div>
+                                  <div class="rule-require" style="color:red;display: none;" >必填</div>
+                                  <div class="rule-tooLong" style="color:red;display: none;" >姓名长度不能超过10个字符</div>`;
+            
+            target.appendChild(formNode);
+            return formNode;
+        },
+        tableAction: function () {
+            const formNode = document.createElement('div');
+            formNode.className = 'body-form-table-target shortText';
+            formNode.setAttribute('draggable', true);
+            formNode.innerHTML = `
+                                  <div class="body-form-table-target-body">
+                                    <input type="text" name="text" onblur="checkTextContent(this)" />
+                                  </div>
+                                  <div class="rule-require" style="color:red;display: none;" >必填</div>
+                                  <div class="rule-tooLong" style="color:red;display: none;" >姓名长度不能超过10个字符</div>`;
+            
+            tableTarget.appendChild(formNode);
+            return formNode;
+        },
+        checkInput: function (textBodyContent) {
+            const inputContent = textBodyContent;
+            const requireRule = textBodyContent.parentElement.parentElement.querySelector('.rule-require');
+            const requireTooLong = textBodyContent.parentElement.parentElement.querySelector('.rule-tooLong');
+            console.log(inputContent.value);
+            if (inputContent.value > 10) {
+                requireTooLong.style = "color:red;display: block;";
+            } else {
+                requireTooLong.style = "color:red;display: none;";
+            }
+
+            if (inputContent.value === '') {
+                requireRule.style = "color:red;display: block;";
+            } else {
+                requireRule.style = "color:red;display: none;";
+            }
+        }
+    },
+    '身份证号': {
+        action: function () {
+            const formNode = document.createElement('div');
+            formNode.className = 'body-form-target shortText';
+            formNode.setAttribute('draggable', true);
+            formNode.innerHTML = `<div class="body-form-target-title" onclick="editCtrlName(this)">
+                                    <div>身份证号</div>
+                                    <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
+                                  </div>
+                                  <div class="body-form-target-body">
+                                    <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
+                                    <input type="text" name="text" onblur="checkTextContent(this)" />
+                                  </div>
+                                  <div class="rule-require" style="color:red;display: none;" >必填</div>
+                                  <div class="rule-text" style="color:red;display: none;" >格式不正确</div>`;
+            
+            target.appendChild(formNode);
+            return formNode;
+        },
+        checkInput: function (textBodyContent) {
+            var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+            const inputContent = textBodyContent;
+            const requireRule = textBodyContent.parentElement.parentElement.querySelector('.rule-require');
+            const TextRule = textBodyContent.parentElement.parentElement.querySelector('.rule-text');
+            console.log(inputContent.value);
+            if (reg.test(inputContent.value) === false) {
+                TextRule.style = "color:red;display: block;";
+            } else {
+                TextRule.style = "color:red;display: none;";
+            }
+
+            if (inputContent.value === '') {
+                requireRule.style = "color:red;display: block;";
+            } else {
+                requireRule.style = "color:red;display: none;";
+            }
+        }
+    },
+    '出生日期': {
+        action: function (birthday) {
+            const formNode = document.createElement('div');
+            formNode.className = 'body-form-target shortText';
+            formNode.setAttribute('draggable', true);
+            formNode.innerHTML = `<div class="body-form-target-title" onclick="editCtrlName(this)">
+                                    <div>出生日期</div>
+                                    <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
+                                  </div>
+                                  <div class="body-form-target-body">
+                                    <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
+                                    <input type="text" disabled name="text" onblur="checkTextContent(this)" value="${birthday}" />
+                                  </div>`;
+            
+            target.appendChild(formNode);
+            return formNode;
+        },
+        
+    },
+    '紧急联系人': {
+        action: function (birthday) {
+            const formNode = document.createElement('div');
+            formNode.className = 'body-form-target shortText';
+            formNode.setAttribute('draggable', true);
+            formNode.innerHTML = `<div class="body-form-target-title" onclick="editCtrlName(this)">
+                                    <div>紧急联系人</div>
+                                    <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
+                                  </div>
+                                  <div class="body-form-target-body">
+                                    <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
+                                    <table id="table">
+                                        <tr>
+                                            <th>姓名</th>
+                                            <th>联系电话</th>
+                                            <th>与本人关系</th>
+                                        </tr>
+                                        <tr>
+                                            <td class="dirTable-name"></td>
+                                            <td class="dirTable-phone"></td>
+                                            <td class="dirTable-line"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="dirTable-name"></td>
+                                            <td class="dirTable-phone"></td>
+                                            <td class="dirTable-line"></td>
+                                        </tr>
+                                    </table>
+                                    <div class="rule-require" style="color:red;display: none;" >必填</div>
+                                    <div class="rule-text" style="color:red;display: none;" >格式不正确</div>
+                                  </div>`;
+            
+            target.appendChild(formNode);
+            return formNode;
+        },
+    },
     '短文本': {
         action: function () {
             const formNode = document.createElement('div');
             formNode.className = 'body-form-target shortText';
+            // formNode.setAttribute('draggable', true);
             formNode.innerHTML = `<div class="body-form-target-title" onclick="editCtrlName(this)">
                                     <div>短文本</div>
                                     <input type="text" disabled style="display: none" onblur="updateCtrlName(this)"/>
@@ -124,7 +296,7 @@ const formTypeActions = {
             return formNode;
         }
     },
-    '电话': {
+    '联系电话': {
         action: function () {
             const formNode = document.createElement('div');
             formNode.className = 'body-form-target tel';
@@ -135,9 +307,29 @@ const formTypeActions = {
                                  <div class="body-form-target-body">
                                     <button type="button" onclick="deleteCtrlFrom(this)"><span>-</span></button>
                                     <input type="tel" name="tel" placeholder="请输入电话" />
-                                 </div>`;
+                                 </div>
+                                 <div class="rule-require" style="color:red;display: none;" >必填</div>
+                                  <div class="rule-text" style="color:red;display: none;" >格式不正确</div>`;
             target.appendChild(formNode);
             return formNode;
+        },
+        checkInput: function (textBodyContent) {
+            var reg = /^1[3456789]\d{9}$/;
+            const inputContent = textBodyContent;
+            const requireRule = textBodyContent.parentElement.parentElement.querySelector('.rule-require');
+            const TextRule = textBodyContent.parentElement.parentElement.querySelector('.rule-text');
+            console.log(inputContent.value);
+            if (reg.test(inputContent.value) === false) {
+                TextRule.style = "color:red;display: block;";
+            } else {
+                TextRule.style = "color:red;display: none;";
+            }
+
+            if (inputContent.value === '') {
+                requireRule.style = "color:red;display: block;";
+            } else {
+                requireRule.style = "color:red;display: none;";
+            }
         }
     },
     '邮箱': {
@@ -325,6 +517,8 @@ Object.keys(formTypeActions).forEach(key => {
     ddElement.innerHTML = '<div>' + key + '</div>';
     ddElement.ondragstart = function () {
         dragCtrl = this;
+        dragCtrlType = this.innerText;
+
     }
     ddElement.ondragend = function () {
         dragCtrl = null;
@@ -332,22 +526,60 @@ Object.keys(formTypeActions).forEach(key => {
     document.querySelector('.tools-body-ctrols').appendChild(ddElement);
 });
 
-//当前拖拽对象
-let dragCtrl = null;
 //弹框的按钮事件
 const onOkButton = document.querySelector('.onOk');
 const onCancelButton = document.querySelector('.cancel');
 let okEventListener = null;
 let cancelEventListener = null;
 
+//表格区域
+const tableSheet = ["姓名", "联系电话", "与本人关系"]
+
+
+
 //拖拽进入目标事件
-target.ondragover =  (e) => {
+target.ondragover = (e) => {
     e.preventDefault();
 }
 //拖拽进入目标区域松开鼠标事件
 target.ondrop =  () => {
-    if(dragCtrl && formTypeActions[dragCtrl.innerText]){
-        const formNode = formTypeActions[dragCtrl.innerText].action();
+    if (dragCtrl && formTypeActions[dragCtrl.innerText]) {
+        let formNode = null;
+        let birthDay = "";
+        if (dragCtrl.innerText === "出生日期") {
+            birthDay = getBirthDay(dragCtrl.innerText);
+            formNode = formTypeActions[dragCtrl.innerText].action(birthDay);
+        } else {
+            formNode = formTypeActions[dragCtrl.innerText].action();
+        }
+
+        //明细表事件待补充
+        // const tableTarget = document.getElementById("table");
+        // tableTarget.ondragover = (e) => {
+        //     e.preventDefault();
+        // }
+        // tableTarget.ondrop = () => {
+        //     if (dragCtrl && formTypeActions[dragCtrl.innerText] && tableSheet.includes(dragCtrl.innerText)) {
+        //         const tableTrs = tableTarget.querySelectorAll("tr").slice(1);
+        //         let sheet = null;
+        //         let node = null;
+        //         switch (dragCtrl.innerText) {
+        //             case "姓名": {
+        //                 node = formTypeActions[dragCtrl.innerText].tableAction();
+        //                 sheet = tableTrs.forEach(tr => {
+        //                     const tds = tr.querySelectorAll("td");
+        //                     tds.filter(td => {
+        //                         td.className === "dirTable-name"
+        //                     });
+        //                     if (tds[0].childElement == null) {
+        //                         tds[0].appendChild(node);
+        //                     }
+        //                 });
+        //             }
+        //         }
+        //     }
+        // }
+        
         
         addNewNodes.push(formNode);       
         const title = duplicateFormNodeName(formNode);
