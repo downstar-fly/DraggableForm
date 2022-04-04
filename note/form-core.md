@@ -5,15 +5,26 @@
 <u>获取到当前权限下可视控件</u>
 
 ### 1.1.2 useStore.ts
-<u>封装store方法 与数据交互</u>
+<u>封装vuex方法 与数据交互</u>
 ***
 
 ## 1.2 store
+<u>初始化dataLogic</u>
+
+？：dataLogic监听 字段值的change | 明细表change | 字段值展示的
+
+缓存发生变化的字段
+
+生成准备提交的字段
 
 ***
 ## 1.3 types
+
+<u>定义formCore的props</u>
 ***
 ## 1.4 utils
+
+guid 生成随机id的方法
 ***
 ## 1.5 **controller.vue**
 
